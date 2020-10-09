@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "JqqTRjMGKlRZoVBANWAibcCWSH35NsPgRB80s5SK9sL2hkIB4uPA5OHkS8dmG/6XLtNWHPI6sahh6RO3cDEjBQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\binhu\\Desktop\\Code\\Syncmuse\\SyncMuseWPF\\SyncMuseWPF\\SyncMuseWPF.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\binhu\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
