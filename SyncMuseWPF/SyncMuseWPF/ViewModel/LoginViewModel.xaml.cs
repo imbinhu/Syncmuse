@@ -1,6 +1,4 @@
-﻿using SyncMuseWPF.Model.Spotify;
-using SyncMuseWPF.Model.Youtube;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -13,16 +11,19 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace SyncMuseWPF.View
+using SyncMuseWPF.Model.Youtube;
+using SyncMuseWPF.Model.Spotify;
+
+namespace SyncMuseWPF.ViewModel
 {
     /// <summary>
     /// Interaction logic for LoginView.xaml
     /// </summary>
-    public partial class LoginView : Window
+    public partial class LoginViewModel : Window
     {
         YoutubeApi youtubeApi;
         SpotifyApi spotifyApi;
-        public LoginView()
+        public LoginViewModel()
         {
             InitializeComponent();
             youtubeApi = new YoutubeApi();
@@ -38,25 +39,13 @@ namespace SyncMuseWPF.View
         {
             if (await spotifyApi.Authenticate(this))
             {
-                spotifyApi.UserProfile();
-                SpotifyUserPlaylistsResponse r = await spotifyApi.Playlist((await spotifyApi.UserProfile()).id);
-                r.items.ForEach(x => Trace.WriteLine(x.name));
-                SpotifyPlaylistItemsResponse s = await spotifyApi.PlaylistItems(r.items[0].id);
-                s.items.ForEach(x => Trace.WriteLine(x.track.name));
-                SpotifySearchItemResponse e = await spotifyApi.SearchItem("[MV] 이달의 소녀(LOONA) Why Not?");
-                Trace.WriteLine("Canzone");
-                Trace.WriteLine(e.tracks.items[0].name);
                 Trace.WriteLine("success spotify");
-                MainView m = new MainView();
+                MainViewModel m = new MainViewModel();
                 m.Show();
             }
-            else
-            {
-                Trace.WriteLine("failed spotify");
-                MainView t = new MainView();
-                t.Show();
-            }
-            
+            Trace.WriteLine("failed spotify");
+            MainViewModel t = new MainViewModel();
+            t.Show();
         }
 
         private void YoutubeLoginBtn_Click(object sender, RoutedEventArgs e)

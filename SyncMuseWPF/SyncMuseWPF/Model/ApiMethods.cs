@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SyncMuseWPF.Model.Youtube
+namespace SyncMuseWPF.Model
 {
-    class Video
+    interface ApiMethods
     {
+        void Playlist();
     }
 }

@@ -7,20 +7,23 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="View\LoginView.xaml.cs">
+    <Compile Update="ViewModel\LoginViewModel.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="View\MainView.xaml.cs">
+    <Compile Update="ViewModel\MainViewModel.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="View\YoutubeElementView.xaml.cs">
+    <Compile Update="ViewModel\YoutubeElementView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="View\YoutubeWindowView.xaml.cs">
+    <Compile Update="ViewModel\YoutubeWindowView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="View\LoginView.xaml">
       <SubType>Designer</SubType>
     </Page>
