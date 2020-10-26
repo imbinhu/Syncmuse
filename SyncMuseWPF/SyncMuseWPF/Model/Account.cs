@@ -7,11 +7,9 @@ namespace SyncMuseWPF.Model
     class Account
     {
         public string Domain { get; }
-        public ApiMethods Api { get; }
-        public Account(string domain, ApiMethods api)
+        public Account(string domain)
         {
             this.Domain = domain;
-            this.Api = api;
         }
     }
 }

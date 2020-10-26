@@ -14,13 +14,13 @@ using System.Windows;
 
 namespace SyncMuseWPF.Model.Youtube
 {
-    class YoutubeApi: ApiMethods
+    class YoutubeApi
     {
-        private const string clientID = { clientID };
-        private const string clientSecret = { clientSecret };
-        private const string apiKey = { apiKey };
-        private const string authorizationEndpoint = { authorizationEndpoint };
-        private const string tokenEndpoint = { tokenEndpoint };
+        private const string clientID = "624454140964-volhpa4901pq4pfu6f94h7da0ai9eif1.apps.googleusercontent.com";
+        private const string clientSecret = "5g_q6cakWWm6amBwFLkmKan6";
+        private const string apiKey = "AIzaSyCMXCSX0SuKfPvB5hSR1Ei9sOozYFHT5tY";
+        private const string authorizationEndpoint = "https://accounts.google.com/o/oauth2/v2/auth";
+        private const string tokenEndpoint = "https://www.googleapis.com/oauth2/v4/token";
         private const string secretFileName = "youtube_secrets.json"; // temporary
 
 
@@ -180,8 +180,7 @@ namespace SyncMuseWPF.Model.Youtube
 
             HttpRequestMessage playlistRequestMessage = new HttpRequestMessage(HttpMethod.Get, playlistRequestURI);
             playlistRequestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            HttpClient playlistRequest = new HttpClient();
-            HttpResponseMessage playlistResponseMessage = await playlistRequest.SendAsync(playlistRequestMessage);
+            HttpResponseMessage playlistResponseMessage = await httpClient.SendAsync(playlistRequestMessage);
 
             Trace.WriteLine(await playlistResponseMessage.Content.ReadAsStringAsync());
 
@@ -199,6 +198,7 @@ namespace SyncMuseWPF.Model.Youtube
             return JsonConvert.DeserializeObject<YoutubeVideosResponse>(await likedVideosResponseMessage.Content.ReadAsStringAsync());
             
         }
+
         public async Task<bool> RefreshToken()
         {
             string refreshTokenRequestURI = "https://oauth2.googleapis.com/token";
