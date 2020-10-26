@@ -5,9 +5,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -15,10 +17,10 @@ namespace SyncMuseWPF.Model.Spotify
 {
     class SpotifyApi
     {
-        private const string clientID = { clientID };
-        private const string authorizationEndpoint = { authorizationEndpoint };
-        private const string tokenEndpoint = { tokenEndpoint };
-        private const string secretFileName = "spotify_secrets.json"; // temporary
+        private const string clientID = "";
+        private const string authorizationEndpoint = "";
+        private const string tokenEndpoint = "";
+        private const string secretFileName = ""; // temporary
 
         private static string refreshToken;
         private static string accessToken;
@@ -66,7 +68,7 @@ namespace SyncMuseWPF.Model.Spotify
             string authorizationRequest = string.Format("https://accounts.spotify.com/authorize?response_type=code&client_id={0}&redirect_uri={1}&scope={2}&state={3}&code_challenge={4}&code_challenge_method={5}",
                 clientID,
                 System.Uri.EscapeDataString(redirectURI),
-                "user-follow-modify",
+                "user-follow-modify user-read-email playlist-read-private",
                 state,
                 code_challenge,
                 code_challenge_method);
@@ -199,6 +201,59 @@ namespace SyncMuseWPF.Model.Spotify
             return true;
         }
 
+        public async Task<SpotifyCurrentUserProfileResponse> UserProfile()
+        {
+            // builds the  request
+            string playlistRequestURI = string.Format("https://api.spotify.com/v1/me");
+
+            HttpRequestMessage playlistRequestMessage = new HttpRequestMessage(HttpMethod.Get, playlistRequestURI);
+            playlistRequestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            HttpResponseMessage playlistResponseMessage = await httpClient.SendAsync(playlistRequestMessage);
+
+            return JsonConvert.DeserializeObject<SpotifyCurrentUserProfileResponse>(await playlistResponseMessage.Content.ReadAsStringAsync());
+        }
+        public async Task<SpotifyUserPlaylistsResponse> Playlist(string userId)
+        {
+            userId = "8t9ifr7uvczma942eq5uzyehf";
+            // builds the  request
+            string playlistRequestURI = string.Format("https://api.spotify.com/v1/users/{0}/playlists", userId);
+
+            Trace.WriteLine(accessToken);
+
+            HttpRequestMessage playlistRequestMessage = new HttpRequestMessage(HttpMethod.Get, playlistRequestURI);
+            playlistRequestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            HttpResponseMessage playlistResponseMessage = await httpClient.SendAsync(playlistRequestMessage);
+
+            return JsonConvert.DeserializeObject<SpotifyUserPlaylistsResponse>(await playlistResponseMessage.Content.ReadAsStringAsync());
+        }
+        public async Task<SpotifyPlaylistItemsResponse> PlaylistItems(string playlistId)
+        {
+            string playlistRequestURI = string.Format("https://api.spotify.com/v1/playlists/{0}/tracks", playlistId);
+
+            Trace.WriteLine(accessToken);
+
+            HttpRequestMessage playlistRequestMessage = new HttpRequestMessage(HttpMethod.Get, playlistRequestURI);
+            playlistRequestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            HttpResponseMessage playlistResponseMessage = await httpClient.SendAsync(playlistRequestMessage);
+
+            return JsonConvert.DeserializeObject<SpotifyPlaylistItemsResponse>(await playlistResponseMessage.Content.ReadAsStringAsync());
+        }
+
+        public async Task<SpotifySearchItemResponse> SearchItem(string query)
+        {
+            query = Regex.Replace(query, "[^A-Za-z0-9 -]", "").ToLower();
+            query = query.Replace("-", "").Replace("official mv", "").Replace("mv", "").Replace(" ", "%20");
+            string playlistRequestURI = string.Format("https://api.spotify.com/v1/search?q={0}&type=track&market=IT", query);
+
+            Trace.WriteLine(accessToken);
+
+            HttpRequestMessage playlistRequestMessage = new HttpRequestMessage(HttpMethod.Get, playlistRequestURI);
+            playlistRequestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            HttpResponseMessage playlistResponseMessage = await httpClient.SendAsync(playlistRequestMessage);
+
+            return JsonConvert.DeserializeObject<SpotifySearchItemResponse>(await playlistResponseMessage.Content.ReadAsStringAsync());
+        }
+
         #region Cryptography Methods
         public static string randomDataBase64url(uint length)
         {
@@ -239,4 +294,31 @@ namespace SyncMuseWPF.Model.Spotify
         }
         #endregion
     }
+
+    #region Response structs
+
+    public class ExternalIds
+    {
+        public string isrc { get; set; }
+    }
+    struct ExternalUrls
+    {
+        public string spotify { get; set; }
+    }
+    struct Artist
+    {
+        public ExternalUrls external_urls { get; set; }
+        public string href { get; set; }
+        public string id { get; set; }
+        public string name { get; set; }
+        public string type { get; set; }
+        public string uri { get; set; }
+    }
+    struct Image
+    {
+        public string height { get; set; }
+        public string url { get; set; }
+        public string width { get; set; }
+    }
+    #endregion
 }

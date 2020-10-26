@@ -24,4 +24,9 @@
     <Resource Include="Assets\Spotify_Icon_RGB_Green.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Network\Youtube\" />
+    <Folder Include="Network\Spotify\" />
+  </ItemGroup>
+
 </Project>
