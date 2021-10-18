@@ -31,12 +31,7 @@ namespace SyncMuseWPF.View
 
         private void SpotifyLoginBtn_Click(object sender, RoutedEventArgs e)
         {
-            SpotifyLogin();
-        }
-
-        private async void SpotifyLogin()
-        {
-            if (await spotifyApi.Authenticate(this))
+           if (await spotifyApi.Authenticate(this))
             {
                 spotifyApi.UserProfile();
                 SpotifyUserPlaylistsResponse r = await spotifyApi.Playlist((await spotifyApi.UserProfile()).id);
@@ -56,15 +51,9 @@ namespace SyncMuseWPF.View
                 MainView t = new MainView();
                 t.Show();
             }
-            
         }
 
         private void YoutubeLoginBtn_Click(object sender, RoutedEventArgs e)
-        {
-            YoutubeLogin();
-        }
-
-        private async void YoutubeLogin()
         {
             if (await youtubeApi.Authenticate(this))
             {
